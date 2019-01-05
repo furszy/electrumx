@@ -243,6 +243,7 @@ class Coin(object):
     def block(cls, raw_block, height):
         '''Return a Block namedtuple given a raw block and its height.'''
         header = cls.block_header(raw_block, height)
+        #print(height)
         txs = cls.DESERIALIZER(raw_block, start=len(header)).read_tx_block()
         return Block(raw_block, header, txs)
 
@@ -2264,6 +2265,14 @@ class Pivx(Coin):
     RPC_PORT = 51473
 
     @classmethod
+    def static_header_len(cls, height):
+        '''Given a header height return its length.'''
+        if(height >= cls.HDR_V4_HEIGHT):
+            return 112
+        else:
+            return 80
+
+    @classmethod
     def static_header_offset(cls, height):
         assert cls.STATIC_BLOCK_HEADERS
         if height >= cls.HDR_V4_HEIGHT:
@@ -2294,7 +2303,7 @@ class PivxTestnet(Pivx):
         '0000041e482b9b9691d98eefb48473405c0b8ec31b76df3797c74a78680ef818')
     BASIC_HEADER_SIZE = 80
     HDR_V4_SIZE = 112
-    HDR_V4_HEIGHT = 863787
+    HDR_V4_HEIGHT = 201564
     HDR_V4_START_OFFSET = HDR_V4_HEIGHT * BASIC_HEADER_SIZE
     TX_COUNT = 2157510
     TX_COUNT_HEIGHT = 569399
